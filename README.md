@@ -4,9 +4,12 @@ Open source personal finance with AI. Self-hosted, local-first, BYOK.
 
 [nullbook.ai](https://nullbook.ai)
 
-<p align="center">
-  <video src="https://github.com/jfornear/nullbook/blob/main/docs/demo/demo-light.mp4?raw=true" width="720" autoplay loop muted playsinline></video>
-</p>
+|                            Light                            |                         Dark                          |
+| :---------------------------------------------------------: | :---------------------------------------------------: |
+|         ![Home](docs/screenshots-light/02-home.png)         |         ![Home](docs/screenshots/02-home.png)         |
+|    ![Portfolio](docs/screenshots-light/04-portfolio.png)    |    ![Portfolio](docs/screenshots/04-portfolio.png)    |
+| ![Transactions](docs/screenshots-light/05-transactions.png) | ![Transactions](docs/screenshots/05-transactions.png) |
+|      ![Budgets](docs/screenshots-light/07-budgets.png)      |      ![Budgets](docs/screenshots/07-budgets.png)      |
 
 ## Features
 
