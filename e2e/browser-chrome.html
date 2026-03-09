@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        width: 1580px;
+        height: 994px;
+        background: hsl(240, 10%, 3.9%);
+        background-image:
+          radial-gradient(1px 1px at 10% 15%, hsla(0, 0%, 100%, 0.5), transparent),
+          radial-gradient(1px 1px at 25% 35%, hsla(0, 0%, 100%, 0.4), transparent),
+          radial-gradient(1px 1px at 55% 42%, hsla(0, 0%, 100%, 0.5), transparent),
+          radial-gradient(1px 1px at 70% 22%, hsla(0, 0%, 100%, 0.3), transparent),
+          radial-gradient(1px 1px at 85% 55%, hsla(0, 0%, 100%, 0.4), transparent),
+          radial-gradient(1px 1px at 50% 75%, hsla(0, 0%, 100%, 0.3), transparent),
+          radial-gradient(1px 1px at 90% 80%, hsla(0, 0%, 100%, 0.4), transparent);
+        background-size:
+          200px 200px,
+          300px 300px,
+          350px 350px,
+          280px 280px,
+          320px 320px,
+          310px 310px,
+          230px 230px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .window {
+        width: 1442px;
+        border: 1px solid hsl(240, 3.7%, 15.9%);
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .title-bar {
+        height: 44px;
+        flex-shrink: 0;
+        background: hsl(240, 6%, 9%);
+        display: flex;
+        align-items: center;
+        padding: 0 16px;
+        gap: 8px;
+      }
+
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: hsl(240, 3.7%, 15.9%);
+      }
+
+      .content img {
+        display: block;
+        width: 1440px;
+        height: 810px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="window">
+      <div class="title-bar">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+      <div class="content">
+        <img src="" />
+      </div>
+    </div>
+  </body>
+</html>

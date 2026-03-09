@@ -1,0 +1,18 @@
+npx lint-staged
+
+cd frontend && npx vitest run 2>&1
+FRONTEND_EXIT=$?
+
+cd ../backend
+if [ -f .venv/bin/pytest ]; then
+  .venv/bin/pytest 2>&1
+  BACKEND_EXIT=$?
+else
+  echo "Skipping backend tests (venv not set up)"
+  BACKEND_EXIT=0
+fi
+
+if [ $FRONTEND_EXIT -ne 0 ] || [ $BACKEND_EXIT -ne 0 ]; then
+  echo "Tests failed. Commit aborted."
+  exit 1
+fi

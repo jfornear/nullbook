@@ -1,0 +1,17 @@
+{
+  "name": "nullbook",
+  "private": true,
+  "scripts": {
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "husky": "^9",
+    "lint-staged": "^15",
+    "prettier": "^3"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json,css,md,html,yml,yaml}": "prettier --write",
+    "frontend/**/*.{js,jsx,ts,tsx}": "frontend/node_modules/.bin/eslint --config frontend/eslint.config.js --fix"
+  }
+}

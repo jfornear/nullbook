@@ -1,0 +1,30 @@
+{
+  "name": "nullbook",
+  "version": "0.1.0",
+  "description": "nullbook — The AI agent for your personal finances. Open source, self-hosted.",
+  "keywords": [
+    "ai",
+    "finance",
+    "agent",
+    "personal-finance",
+    "self-hosted",
+    "claude"
+  ],
+  "author": "Jesse Fraser",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jfornear/nullbook"
+  },
+  "homepage": "https://nullbook.dev",
+  "bin": {
+    "nullbook": "./bin/nullbook.mjs"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "bin/"
+  ]
+}
