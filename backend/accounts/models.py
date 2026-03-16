@@ -3,21 +3,20 @@ from django.db import models
 
 
 class Institution(models.Model):
+    INSTITUTION_TYPES = [
+        ("bank", "Bank"),
+        ("credit_union", "Credit Union"),
+        ("brokerage", "Brokerage"),
+        ("crypto", "Crypto Exchange"),
+        ("other", "Other"),
+    ]
+
     name = models.CharField(max_length=200)
-    institution_type = models.CharField(
-        max_length=20,
-        choices=[
-            ("bank", "Bank"),
-            ("credit_union", "Credit Union"),
-            ("brokerage", "Brokerage"),
-            ("crypto", "Crypto Exchange"),
-            ("other", "Other"),
-        ],
-        default="bank",
-    )
+    institution_type = models.CharField(max_length=20, choices=INSTITUTION_TYPES, default="bank")
     website = models.URLField(blank=True)
     logo_url = models.URLField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name
@@ -61,8 +60,10 @@ class BalanceHistory(models.Model):
 
     class Meta:
         ordering = ["-date"]
-        unique_together = ["account", "date"]
         verbose_name_plural = "balance histories"
+        constraints = [
+            models.UniqueConstraint(fields=["account", "date"], name="unique_account_date"),
+        ]
 
     def __str__(self):
         return f"{self.account.name} - {self.date}: {self.balance}"

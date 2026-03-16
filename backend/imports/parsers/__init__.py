@@ -2,6 +2,7 @@
 
 import os
 
+from imports.parsers.bank_profiles import detect_bank_profile, list_bank_profiles
 from imports.parsers.csv_parser import apply_mapping, detect_column_mapping, parse_csv
 from imports.parsers.ofx_parser import parse_ofx
 from imports.parsers.qif_parser import parse_qif
@@ -14,6 +15,8 @@ __all__ = [
     "detect_format",
     "apply_mapping",
     "detect_column_mapping",
+    "detect_bank_profile",
+    "list_bank_profiles",
 ]
 
 
@@ -39,4 +42,4 @@ def parse_file(file_content: str, filename: str) -> dict:
         return parse_ofx(file_content)
     elif fmt == "qif":
         return parse_qif(file_content)
-    return parse_csv(file_content)
+    return parse_csv(file_content, filename=filename)

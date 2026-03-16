@@ -39,7 +39,7 @@ class NewsSourceViewSet(
         except Exception:
             logger.exception("Failed to fetch articles for %s", source.name)
             return Response(
-                {"error": "Failed to fetch articles"},
+                {"detail": "Failed to fetch articles."},
                 status=status.HTTP_502_BAD_GATEWAY,
             )
         return Response({"fetched": count})

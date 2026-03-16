@@ -44,6 +44,34 @@ class TaxYearViewSet(viewsets.ModelViewSet):
         response["Content-Disposition"] = f'attachment; filename="tax_summary_{tax_year.year}.csv"'
         return response
 
+    @action(detail=True, methods=["get"], url_path="expense-report")
+    def expense_report(self, request, pk=None):
+        """Generate expense report for a tax year.
+
+        Query params:
+            format: "json" (default), "csv", or "text"
+        """
+        tax_year = self.get_object()
+        fmt = request.query_params.get("format", "json")
+
+        from .expense_report import generate_expense_report
+        report = generate_expense_report(request.user, tax_year.year, fmt=fmt)
+
+        if fmt == "csv":
+            response = HttpResponse(report, content_type="text/csv")
+            response["Content-Disposition"] = (
+                f'attachment; filename="expense_report_{tax_year.year}.csv"'
+            )
+            return response
+        elif fmt == "text":
+            response = HttpResponse(report, content_type="text/plain")
+            response["Content-Disposition"] = (
+                f'attachment; filename="expense_report_{tax_year.year}.txt"'
+            )
+            return response
+        else:
+            return Response(report)
+
 
 class TaxDocumentViewSet(viewsets.ModelViewSet):
     serializer_class = TaxDocumentSerializer

@@ -13,8 +13,9 @@ class NewsSourceSerializer(serializers.ModelSerializer):
             "feed_url",
             "is_active",
             "created_at",
+            "updated_at",
         ]
-        read_only_fields = ["id", "created_at"]
+        read_only_fields = ["id", "created_at", "updated_at"]
 
 
 class NewsArticleSerializer(serializers.ModelSerializer):
@@ -33,8 +34,9 @@ class NewsArticleSerializer(serializers.ModelSerializer):
             "is_read",
             "is_bookmarked",
             "created_at",
+            "updated_at",
         ]
-        read_only_fields = ["id", "created_at"]
+        read_only_fields = ["id", "created_at", "updated_at"]
 
 
 class WatchlistSerializer(serializers.ModelSerializer):

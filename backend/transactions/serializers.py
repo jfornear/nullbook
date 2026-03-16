@@ -10,15 +10,15 @@ from .models import Budget, Category, CategoryRule, Goal, Subscription, Tag, Tra
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ["id", "name", "parent", "icon", "created_at"]
-        read_only_fields = ["created_at"]
+        fields = ["id", "name", "parent", "icon", "created_at", "updated_at"]
+        read_only_fields = ["id", "created_at", "updated_at"]
 
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
-        fields = ["id", "name", "color"]
-        read_only_fields = ["id"]
+        fields = ["id", "name", "color", "created_at", "updated_at"]
+        read_only_fields = ["id", "created_at", "updated_at"]
 
 
 class TransactionSerializer(serializers.ModelSerializer):
@@ -67,7 +67,7 @@ class TransactionSerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
         ]
-        read_only_fields = ["created_at", "updated_at"]
+        read_only_fields = ["id", "created_at", "updated_at"]
         extra_kwargs = {
             "tags": {"read_only": True},
         }
@@ -78,8 +78,8 @@ class CategoryRuleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CategoryRule
-        fields = ["id", "pattern", "category", "category_name", "auto_generated", "created_at"]
-        read_only_fields = ["created_at"]
+        fields = ["id", "pattern", "category", "category_name", "auto_generated", "created_at", "updated_at"]
+        read_only_fields = ["id", "created_at", "updated_at"]
 
 
 class GoalSerializer(serializers.ModelSerializer):
@@ -101,7 +101,7 @@ class GoalSerializer(serializers.ModelSerializer):
             "category", "category_name", "linked_account", "account_name",
             "progress_pct", "created_at", "updated_at",
         ]
-        read_only_fields = ["created_at", "updated_at"]
+        read_only_fields = ["id", "created_at", "updated_at"]
 
 
 class BudgetSerializer(serializers.ModelSerializer):
@@ -114,7 +114,7 @@ class BudgetSerializer(serializers.ModelSerializer):
             "id", "category", "category_name", "amount", "period",
             "is_active", "spent", "created_at", "updated_at",
         ]
-        read_only_fields = ["created_at", "updated_at"]
+        read_only_fields = ["id", "created_at", "updated_at"]
 
     def get_spent(self, obj):
         # Use pre-computed value if available (set by progress action to avoid N+1)
@@ -152,4 +152,4 @@ class SubscriptionSerializer(serializers.ModelSerializer):
             "cancellation_url", "cancellation_method", "notes",
             "annual_cost", "created_at", "updated_at",
         ]
-        read_only_fields = ["confidence", "created_at", "updated_at"]
+        read_only_fields = ["id", "confidence", "created_at", "updated_at"]

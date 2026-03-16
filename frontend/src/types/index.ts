@@ -174,6 +174,9 @@ export interface UploadPreview {
   detected_mapping: Record<string, string>;
   row_count: number;
   rows?: Record<string, string>[];
+  bank_profile?: string | null;
+  bank_profile_name?: string | null;
+  source_institution?: string | null;
 }
 
 export interface ImportExecuteResult {

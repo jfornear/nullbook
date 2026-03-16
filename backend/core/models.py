@@ -54,6 +54,7 @@ class Alert(models.Model):
     action_url = models.CharField(max_length=500, blank=True, help_text="Frontend route or external URL")
     metadata = models.JSONField(default=dict, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["-created_at"]

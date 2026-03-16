@@ -6,16 +6,14 @@ from django.db import models
 class TaxYear(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="tax_years")
     year = models.PositiveIntegerField()
-    filing_status = models.CharField(
-        max_length=30,
-        choices=[
-            ("single", "Single"),
-            ("married_joint", "Married Filing Jointly"),
-            ("married_separate", "Married Filing Separately"),
-            ("head_of_household", "Head of Household"),
-        ],
-        default="single",
-    )
+    FILING_STATUS_CHOICES = [
+        ("single", "Single"),
+        ("married_joint", "Married Filing Jointly"),
+        ("married_separate", "Married Filing Separately"),
+        ("head_of_household", "Head of Household"),
+    ]
+
+    filing_status = models.CharField(max_length=30, choices=FILING_STATUS_CHOICES, default="single")
     federal_tax_paid = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     state_tax_paid = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     notes = models.TextField(blank=True)
@@ -24,7 +22,9 @@ class TaxYear(models.Model):
 
     class Meta:
         ordering = ["-year"]
-        unique_together = ["user", "year"]
+        constraints = [
+            models.UniqueConstraint(fields=["user", "year"], name="unique_user_tax_year"),
+        ]
 
     def __str__(self):
         return f"{self.year} - {self.get_filing_status_display()}"
@@ -38,6 +38,7 @@ class TaxDocument(models.Model):
         ("1099_b", "1099-B"),
         ("1099_misc", "1099-MISC"),
         ("1099_nec", "1099-NEC"),
+        ("1099_da", "1099-DA"),
         ("1098", "1098"),
         ("k1", "K-1"),
         ("other", "Other"),
@@ -50,6 +51,7 @@ class TaxDocument(models.Model):
     details = models.JSONField(default=dict, blank=True)
     notes = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["document_type"]
@@ -77,10 +79,12 @@ class DeductibleExpense(models.Model):
     tax_year = models.ForeignKey(TaxYear, on_delete=models.CASCADE, related_name="deductions")
     receipt = models.ForeignKey("Receipt", on_delete=models.SET_NULL, null=True, blank=True, related_name="expenses")
     deduction_type = models.CharField(max_length=30, choices=DEDUCTION_TYPES)
+    turbotax_category = models.CharField(max_length=100, blank=True, help_text="TurboTax category grouping")
     description = models.CharField(max_length=500)
     amount = models.DecimalField(max_digits=12, decimal_places=2)
     is_verified = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["-amount"]

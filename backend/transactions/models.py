@@ -7,6 +7,7 @@ class Category(models.Model):
     parent = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True, related_name="children")
     icon = models.CharField(max_length=50, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["name"]
@@ -22,10 +23,14 @@ class Tag(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="tags")
     name = models.CharField(max_length=50)
     color = models.CharField(max_length=7, default="#6366f1")  # hex color
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["name"]
-        unique_together = ["user", "name"]
+        constraints = [
+            models.UniqueConstraint(fields=["user", "name"], name="unique_user_tag"),
+        ]
 
     def __str__(self):
         return self.name
@@ -65,6 +70,7 @@ class CategoryRule(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="rules")
     auto_generated = models.BooleanField(default=False, help_text="True if created automatically from user corrections")
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["pattern"]
@@ -108,7 +114,9 @@ class Subscription(models.Model):
 
     class Meta:
         ordering = ["-amount"]
-        unique_together = ["user", "merchant"]
+        constraints = [
+            models.UniqueConstraint(fields=["user", "merchant"], name="unique_user_merchant"),
+        ]
 
     def __str__(self):
         return f"{self.merchant}: ${self.amount}/{self.frequency}"
@@ -165,7 +173,9 @@ class Budget(models.Model):
 
     class Meta:
         ordering = ["-amount"]
-        unique_together = ["user", "category"]
+        constraints = [
+            models.UniqueConstraint(fields=["user", "category"], name="unique_user_budget_category"),
+        ]
 
     def __str__(self):
         cat = self.category.name if self.category else "Total"

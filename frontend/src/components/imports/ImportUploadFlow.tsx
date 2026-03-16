@@ -1,9 +1,10 @@
 import { useState, useRef, useCallback } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Upload, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
+import { Upload, CheckCircle2, AlertCircle, Loader2, BadgeCheck } from "lucide-react";
 import { api } from "@/lib/api";
 import type { Account, PaginatedResponse, UploadPreview, ImportExecuteResult } from "@/types";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -265,34 +266,47 @@ export default function ImportUploadFlow() {
             </div>
           )}
           <div>
-            <p className="font-medium">{preview.file_name}</p>
+            <div className="flex items-center gap-2">
+              <p className="font-medium">{preview.file_name}</p>
+              {preview.bank_profile_name && (
+                <Badge variant="default" className="bg-green-600 hover:bg-green-700">
+                  <BadgeCheck className="mr-1 h-3 w-3" />
+                  Detected: {preview.bank_profile_name}
+                </Badge>
+              )}
+            </div>
             <p className="text-sm text-muted-foreground">
-              {preview.row_count} rows detected. Map columns below, then import.
+              {preview.row_count} rows detected.{" "}
+              {preview.bank_profile
+                ? "Column mapping auto-configured. Review and import."
+                : "Map columns below, then import."}
             </p>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-3">
-            {preview.headers.map((header) => (
-              <div key={header} className="grid gap-1.5">
-                <Label className="text-xs">{header}</Label>
-                <Select
-                  value={getInternalFieldForHeader(header)}
-                  onValueChange={(v) => handleMappingChange(header, v)}
-                >
-                  <SelectTrigger className="h-8 text-xs">
-                    <SelectValue placeholder="Skip" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {COLUMN_OPTIONS.map((opt) => (
-                      <SelectItem key={opt.value} value={opt.value}>
-                        {opt.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            ))}
-          </div>
+          {!preview.bank_profile && (
+            <div className="grid gap-3 sm:grid-cols-3">
+              {preview.headers.map((header) => (
+                <div key={header} className="grid gap-1.5">
+                  <Label className="text-xs">{header}</Label>
+                  <Select
+                    value={getInternalFieldForHeader(header)}
+                    onValueChange={(v) => handleMappingChange(header, v)}
+                  >
+                    <SelectTrigger className="h-8 text-xs">
+                      <SelectValue placeholder="Skip" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {COLUMN_OPTIONS.map((opt) => (
+                        <SelectItem key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              ))}
+            </div>
+          )}
 
           {hasMissingRequired && (
             <div className="rounded-lg border border-yellow-500/50 bg-yellow-50 p-3 text-sm text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-200">

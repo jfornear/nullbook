@@ -19,6 +19,7 @@ class Security(models.Model):
     exchange = models.CharField(max_length=50, blank=True)
     currency = models.CharField(max_length=3, default="USD")
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["symbol"]
@@ -39,7 +40,9 @@ class Holding(models.Model):
 
     class Meta:
         ordering = ["security__symbol"]
-        unique_together = ["user", "account", "security"]
+        constraints = [
+            models.UniqueConstraint(fields=["user", "account", "security"], name="unique_user_account_security"),
+        ]
 
     def __str__(self):
         return f"{self.security.symbol}: {self.shares} shares"
@@ -57,11 +60,46 @@ class PriceHistory(models.Model):
 
     class Meta:
         ordering = ["-date"]
-        unique_together = ["security", "date"]
         verbose_name_plural = "price histories"
+        constraints = [
+            models.UniqueConstraint(fields=["security", "date"], name="unique_security_price_date"),
+        ]
 
     def __str__(self):
         return f"{self.security.symbol} {self.date}: {self.close_price}"
+
+
+class CryptoTaxLot(models.Model):
+    """Tax lot for crypto dispositions — tracks cost basis and gains/losses."""
+
+    HOLDING_PERIODS = [
+        ("short_term", "Short-Term"),
+        ("long_term", "Long-Term"),
+        ("unknown", "Unknown"),
+    ]
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="crypto_tax_lots")
+    asset = models.CharField(max_length=20)
+    quantity = models.DecimalField(max_digits=18, decimal_places=8)
+    cost_basis = models.DecimalField(max_digits=14, decimal_places=2, default=0)
+    date_acquired = models.DateField(null=True, blank=True)
+    date_disposed = models.DateField(null=True, blank=True)
+    proceeds = models.DecimalField(max_digits=14, decimal_places=2, default=0)
+    gain_loss = models.DecimalField(max_digits=14, decimal_places=2, default=0)
+    holding_period = models.CharField(max_length=20, choices=HOLDING_PERIODS, default="unknown")
+    source = models.CharField(max_length=50, blank=True, help_text="e.g., 'coinbase', '1099-da'")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-date_disposed"]
+
+    def __str__(self):
+        return f"{self.asset} {self.quantity} — {self.holding_period} gain: ${self.gain_loss}"
+
+    @property
+    def is_gain(self):
+        return self.gain_loss > 0
 
 
 class TradeHistory(models.Model):

@@ -173,6 +173,19 @@ class TransactionViewSet(viewsets.ModelViewSet):
         delete.delete()
         return Response({"kept": keep_id, "deleted": delete_id})
 
+    @action(detail=False, methods=["post"], url_path="export/anonymized")
+    def export_anonymized(self, request):
+        """Export transactions as an anonymized CSV with PII stripped."""
+        from django.http import HttpResponse
+
+        from core.anonymize import export_anonymized_csv
+
+        queryset = self.get_queryset()[:50000]
+        csv_content = export_anonymized_csv(queryset)
+        response = HttpResponse(csv_content, content_type="text/csv")
+        response["Content-Disposition"] = 'attachment; filename="transactions_anonymized.csv"'
+        return response
+
     @action(detail=False, methods=["get"])
     def spending_summary(self, request):
         """Return spending grouped by category for a date range.

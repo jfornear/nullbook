@@ -183,10 +183,27 @@ def generate_schedule_c(user, tax_year: int) -> dict:
             "item_count": len(data["items"]),
         }
 
+    # Build parallel TurboTax grouping
+    from taxes.turbotax_mapping import map_to_turbotax
+
+    expenses_by_turbotax = defaultdict(lambda: {"amount": Decimal("0"), "item_count": 0})
+    for cat, data in expenses_by_category.items():
+        tt_cat = map_to_turbotax(cat)
+        expenses_by_turbotax[tt_cat]["amount"] += data["amount"]
+        expenses_by_turbotax[tt_cat]["item_count"] += len(data["items"])
+
+    formatted_turbotax = {}
+    for cat, data in sorted(expenses_by_turbotax.items()):
+        formatted_turbotax[cat] = {
+            "amount": str(data["amount"]),
+            "item_count": data["item_count"],
+        }
+
     return {
         "tax_year": tax_year,
         "gross_income": str(gross_income),
         "expenses": formatted_expenses,
+        "expenses_by_turbotax": formatted_turbotax,
         "total_expenses": str(total_deductible),
         "net_profit": str(net_profit),
         "se_tax_estimate": str(net_profit * Decimal("0.9235") * Decimal("0.153")),

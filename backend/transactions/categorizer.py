@@ -121,6 +121,17 @@ Only use categories from the list above. If unsure, use the closest match."""
     }
 
 
+def categorize_for_taxes(user, tax_year: int, limit: int = 5000):
+    """Run Schedule C business categorization on transactions for a tax year.
+
+    This uses the keyword-based categorizer (not AI) to classify
+    transactions into tax categories like 'Software & SaaS', 'Travel',
+    'Meals', etc.
+    """
+    from transactions.business_categorizer import batch_categorize_for_taxes
+    return batch_categorize_for_taxes(user, tax_year, limit)
+
+
 def learn_from_correction(user, transaction_id: int, new_category_id: int):
     """When a user re-categorizes a transaction, create a rule automatically."""
     from transactions.models import Category, CategoryRule, Transaction

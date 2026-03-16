@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, CheckCircle2, Circle, Download } from "lucide-react";
+import { Plus, Pencil, Trash2, CheckCircle2, Circle, Download, FileText } from "lucide-react";
 import { api, getCsrfToken } from "@/lib/api";
 import type { TaxYear, TaxDocument, DeductibleExpense } from "@/types";
 import { Badge } from "@/components/ui/badge";
@@ -88,6 +88,30 @@ export function TaxYearDetailSheet({ taxYear, open, onOpenChange, onEdit, onDele
     }
   }
 
+  async function handleExpenseReport(format: "csv" | "text") {
+    if (!taxYear) return;
+    try {
+      const csrfToken = getCsrfToken();
+      const headers: Record<string, string> = {};
+      if (csrfToken) headers["X-CSRFToken"] = csrfToken;
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL || ""}/api/taxes/tax-years/${taxYear.id}/expense-report/?format=${format}`,
+        { credentials: "include", headers }
+      );
+      if (!res.ok) throw new Error("Export failed");
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `expense_report_${taxYear.year}.${format === "text" ? "txt" : format}`;
+      a.click();
+      URL.revokeObjectURL(url);
+      toast.success("Expense report downloaded");
+    } catch {
+      toast.error("Failed to generate expense report");
+    }
+  }
+
   if (!taxYear) return null;
 
   const documents = detail?.documents || [];
@@ -101,6 +125,15 @@ export function TaxYearDetailSheet({ taxYear, open, onOpenChange, onEdit, onDele
             <div className="flex items-center justify-between">
               <SheetTitle>{taxYear.year} Tax Year</SheetTitle>
               <div className="flex gap-1">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8"
+                  onClick={() => handleExpenseReport("csv")}
+                  title="Expense Report (CSV)"
+                >
+                  <FileText className="h-4 w-4" />
+                </Button>
                 <Button
                   variant="ghost"
                   size="icon"

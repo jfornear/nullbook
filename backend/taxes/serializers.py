@@ -22,12 +22,14 @@ class DeductibleExpenseSerializer(_TaxYearOwnershipMixin, serializers.ModelSeria
             "tax_year",
             "receipt",
             "deduction_type",
+            "turbotax_category",
             "description",
             "amount",
             "is_verified",
             "created_at",
+            "updated_at",
         ]
-        read_only_fields = ["id", "created_at"]
+        read_only_fields = ["id", "created_at", "updated_at"]
 
 
 class TaxDocumentSerializer(_TaxYearOwnershipMixin, serializers.ModelSerializer):
@@ -42,8 +44,9 @@ class TaxDocumentSerializer(_TaxYearOwnershipMixin, serializers.ModelSerializer)
             "details",
             "notes",
             "created_at",
+            "updated_at",
         ]
-        read_only_fields = ["id", "created_at"]
+        read_only_fields = ["id", "created_at", "updated_at"]
 
 
 class TaxYearSerializer(serializers.ModelSerializer):

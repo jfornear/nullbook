@@ -1048,6 +1048,15 @@ def _build_tax_input(tax_year, filing_status_override=None):
             else:
                 short_term_gains += st
                 long_term_gains += lt
+        elif doc.document_type == "1099_da":
+            # Digital asset form — treat as short-term gains by default
+            st = Decimal(str(details.get("short_term", 0)))
+            lt = Decimal(str(details.get("long_term", 0)))
+            if st == 0 and lt == 0:
+                short_term_gains += doc.amount
+            else:
+                short_term_gains += st
+                long_term_gains += lt
         elif doc.document_type == "1099_nec":
             self_employment_income += doc.amount
         elif doc.document_type == "1099_misc":
@@ -2131,6 +2140,18 @@ def _set_budget(user, params):
     }
 
 
+def _categorize_business_expenses(user, params):
+    """Run keyword-based business categorizer on transactions for a tax year."""
+    tax_year = params.get("tax_year")
+    if not tax_year:
+        return {"error": "tax_year is required."}
+
+    from transactions.business_categorizer import batch_categorize_for_taxes
+    result = batch_categorize_for_taxes(user, int(tax_year))
+    result["component_type"] = "expense_report"
+    return result
+
+
 TOOL_HANDLERS = {
     "get_accounts": _get_accounts,
     "query_transactions": _query_transactions,
@@ -2182,4 +2203,6 @@ TOOL_HANDLERS = {
     # Goals
     "get_goals": _get_goals,
     "create_goal": _create_goal,
+    # Tax Prep: Business Categorizer
+    "categorize_business_expenses": _categorize_business_expenses,
 }

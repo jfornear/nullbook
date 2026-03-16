@@ -8,6 +8,7 @@ class NewsSource(models.Model):
     feed_url = models.URLField(blank=True, help_text="RSS/Atom feed URL")
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["name"]
@@ -25,6 +26,7 @@ class NewsArticle(models.Model):
     is_read = models.BooleanField(default=False)
     is_bookmarked = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["-published_at"]

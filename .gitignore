@@ -62,3 +62,11 @@ celerybeat-schedule
 celerybeat-schedule-shm
 celerybeat-schedule-wal
 celerybeat.pid
+
+# Personal financial data
+2025/
+*.csv
+*.ofx
+*.qfx
+*.qif
+uploads/
