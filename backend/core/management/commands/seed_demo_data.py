@@ -33,7 +33,7 @@ class Command(BaseCommand):
         user, created = User.objects.get_or_create(
             username=demo_username,
             defaults={
-                "email": "jesse@nullbook.ai",
+                "email": "jesse@example.com",
                 "first_name": "Jesse",
                 "is_staff": True,
                 "is_superuser": True,

@@ -1,4 +1,4 @@
-# nullbook installer for Windows — irm https://nullbook.ai/install.ps1 | iex
+# nullbook installer for Windows — irm https://raw.githubusercontent.com/jfornear/nullbook/main/install.ps1 | iex
 #Requires -Version 5.1
 $ErrorActionPreference = "Stop"
 

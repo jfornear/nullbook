@@ -2,8 +2,6 @@
 
 **The AI agent for your personal finances.**
 
-Website: nullbook.ai
-
 ## Name
 
 Always lowercase: nullbook. One word. Never "NullBook", "Null Book", or "Nullbook".

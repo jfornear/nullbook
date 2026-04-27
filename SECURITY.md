@@ -2,9 +2,7 @@
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability in nullbook, please report it responsibly.
-
-**Email**: security@nullbook.ai
+If you discover a security vulnerability in nullbook, please report it responsibly by opening a GitHub issue or contacting the maintainer.
 
 Please include:
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# nullbook installer — curl -fsSL https://nullbook.ai/install.sh | bash
+# nullbook installer — curl -fsSL https://raw.githubusercontent.com/jfornear/nullbook/main/install.sh | bash
 set -euo pipefail
 
 # ── Colors ────────────────────────────────────────────
@@ -47,7 +47,7 @@ if [ "$OS" = "windows" ]; then
   echo ""
   echo -e "  ${BOLD}Option 1: Use PowerShell (recommended)${NC}"
   echo -e "  ${DIM}Open PowerShell and run:${NC}"
-  echo -e "    irm https://nullbook.ai/install.ps1 | iex"
+  echo -e "    irm https://raw.githubusercontent.com/jfornear/nullbook/main/install.ps1 | iex"
   echo ""
   echo -e "  ${BOLD}Option 2: Use WSL${NC}"
   echo -e "  ${DIM}Install WSL, then re-run this script inside it:${NC}"
