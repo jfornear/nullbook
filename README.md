@@ -2,8 +2,6 @@
 
 Open source personal finance with AI. Self-hosted, local-first, BYOK.
 
-[nullbook.ai](https://nullbook.ai)
-
 ![Home](docs/screenshots-light/home-chrome.png)
 
 ## Quick start
